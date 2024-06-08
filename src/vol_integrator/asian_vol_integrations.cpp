@@ -31,7 +31,7 @@ namespace HJM
                 double term_Te_Te = (exp( -(alpha_a_i + alpha_b_j) * Te_minus_te)
                     - exp( -(alpha_a_i + alpha_b_j) * Te_minus_ts));
 
-                double all_terms = term_Ts_Ts + term_Te_Ts + term_Ts_Te + term_Ts_Ts;
+                double all_terms = term_Ts_Ts - term_Te_Ts - term_Ts_Te + term_Ts_Ts;
                 double scalar = rho_ai_bj * sigma_a_i * sigma_b_j / (alpha_a_i * alpha_b_j * (alpha_a_i + alpha_b_j));
                 return all_terms * scalar;
             }
@@ -41,12 +41,12 @@ namespace HJM
                 double p_observation_start_time, double p_observation_end_time) const
             {
                 double accumulator(0);
-                for( int idx_1; idx_1 < p_indices_1.size(); ++idx_1)
+                for( int idx_1(0); idx_1 < p_indices_1.size(); ++idx_1)
                 {
-                    for( int idx_2; idx_2 < p_indices_2.size(); ++idx_2)
+                    for( int idx_2(0); idx_2 < p_indices_2.size(); ++idx_2)
                     {
                         accumulator += exponential_integral_for_asian_covariance(
-                            idx_1, idx_2, 
+                            p_indices_1[idx_1], p_indices_2[idx_2], 
                             p_delivery_start_time, p_delivery_end_time,
                             p_observation_start_time, p_observation_end_time);
                     }
