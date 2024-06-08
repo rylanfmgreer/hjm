@@ -32,12 +32,10 @@ namespace HJM
             {
                 accumulator += exponential_integral_for_covariance(
                     p_indices_1[idx_1], p_indices_2[idx_2],
-                    p_delivery_time,p_observation_start_time, p_observation_end_time);
-                    
-            }
-        
+                    p_delivery_time,p_observation_start_time, p_observation_end_time);           
+            }   
         }
-        return accumulator;
+        return accumulator / (p_observation_end_time - p_observation_start_time);
     }
 
     double VolIntegrator::variance(IdxVec p_indices,

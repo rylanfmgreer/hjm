@@ -20,6 +20,7 @@ namespace HJM
                 double Te_minus_ts = p_delivery_end_time - p_observation_start_time;
                 double Ts_minus_te = p_delivery_start_time - p_observation_end_time;
                 double Te_minus_te = p_delivery_end_time - p_observation_end_time;
+                double integration_period = p_observation_end_time - p_observation_start_time;
 
                 // create the terms we add together
                 double term_Ts_Ts = (exp( -(alpha_a_i + alpha_b_j) * Ts_minus_te)
@@ -32,8 +33,9 @@ namespace HJM
                     - exp( -(alpha_a_i + alpha_b_j) * Te_minus_ts));
 
                 double all_terms = term_Ts_Ts - term_Te_Ts - term_Ts_Te + term_Ts_Ts;
-                double scalar = rho_ai_bj * sigma_a_i * sigma_b_j / (alpha_a_i * alpha_b_j * (alpha_a_i + alpha_b_j));
-                return all_terms * scalar;
+                double scalar_numerator = rho_ai_bj * sigma_a_i * sigma_b_j;
+                double scalar_denominator = (alpha_a_i * alpha_b_j * (alpha_a_i + alpha_b_j)) / (integration_period * integration_period);
+                return all_terms * scalar_numerator / scalar_denominator;
             }
 
     double VolIntegrator::asian_covariance(IdxVec p_indices_1, IdxVec p_indices_2,
@@ -51,7 +53,7 @@ namespace HJM
                             p_observation_start_time, p_observation_end_time);
                     }
                 }
-                return accumulator;
+                return accumulator / (p_observation_end_time - p_observation_start_time);
             }
     double VolIntegrator::asian_variance(IdxVec p_indices,
             double p_delivery_start_time, double p_delivery_end_time,

@@ -7,6 +7,13 @@ namespace HJM
     typedef std::vector<double> DoubVec;
     class HJM_Model
     {
+        /*
+            We assume W(t) is an N-dimensional Brownian motion with correlation matrix S.
+            Let f(t, T) be the price of a contract for instantaneous delivery at time T,
+            observed at time t.
+
+
+        */
         public:
         HJM_Model();
         HJM_Model(DoubVec p_alphas, DoubVec p_sigmas, std::vector<DoubVec> p_correlations);
@@ -23,7 +30,7 @@ namespace HJM
         void set_correlations(const std::vector<DoubVec> p_correlations);
         void size_check();
 
-        DoubVec m_alphas;
+        DoubVec m_alphas; // a_1, ..., a_n
         DoubVec m_sigmas;
         std::vector<DoubVec> m_correlations;
     
