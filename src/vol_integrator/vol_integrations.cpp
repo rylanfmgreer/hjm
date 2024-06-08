@@ -26,9 +26,9 @@ namespace HJM
             double p_observation_end_time) const
     {
         double accumulator(0);
-        for( int idx_1; idx_1 < p_indices_1.size(); ++idx_1)
+        for( int idx_1(0); idx_1 < p_indices_1.size(); ++idx_1)
         {
-            for( int idx_2; idx_2 < p_indices_2.size(); ++idx_2)
+            for( int idx_2(0); idx_2 < p_indices_2.size(); ++idx_2)
             {
                 accumulator += exponential_integral_for_covariance(
                     idx_1, idx_2, p_delivery_time,p_observation_start_time, p_observation_end_time);

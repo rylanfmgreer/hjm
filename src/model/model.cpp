@@ -3,7 +3,7 @@
 #include <cassert>
 namespace HJM
 {
-    HJM_Model(){};
+    HJM_Model::HJM_Model(){}
     HJM_Model::HJM_Model(DoubVec p_alphas, DoubVec p_sigmas, std::vector<DoubVec> p_correlations)
     {
         set_alphas(p_alphas);

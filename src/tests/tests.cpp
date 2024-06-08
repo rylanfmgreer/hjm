@@ -1,6 +1,7 @@
 #include "tests.hpp"
-#include "test_objects.hpp"
 #include <cmath>
+#include <iostream>
+
 namespace HJM
 {
     TestSuite::TestSuite()
@@ -27,7 +28,7 @@ namespace HJM
 
     void TestSuite::run_tests() const
     {
-        test_asian_correlation();
-        test_correlation();
+        std::cout << test_asian_correlation() << std::endl;
+        std::cout << test_correlation() << std::endl;
     }
 }

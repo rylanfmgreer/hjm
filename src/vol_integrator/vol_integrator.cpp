@@ -4,7 +4,7 @@
 namespace HJM
 {
 
-    
+     VolIntegrator::VolIntegrator(){}
     VolIntegrator::VolIntegrator(const HJM_Model p_model)
     {
         set_model(p_model);

@@ -1,8 +1,10 @@
 #ifndef _tests_9348028930482903
 #define _tests_9348028930482903
+#pragma once
 
 #include "../model/model.hpp"
 #include "../vol_integrator/vol_integrator.hpp"
+#include "test_objects.hpp"
 
 namespace HJM
 {
