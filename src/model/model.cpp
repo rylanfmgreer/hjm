@@ -1,13 +1,15 @@
 #include "model.hpp"
 #include "../utils/utils.hpp"
-
+#include <cassert>
 namespace HJM
 {
+    HJM_Model(){};
     HJM_Model::HJM_Model(DoubVec p_alphas, DoubVec p_sigmas, std::vector<DoubVec> p_correlations)
     {
         set_alphas(p_alphas);
         set_sigmas(p_sigmas);
         set_correlations(p_correlations);
+        size_check();
     }
 
     HJM_Model HJM_Model::copy() const
@@ -28,5 +30,16 @@ namespace HJM
     void HJM_Model::set_correlations(const std::vector<DoubVec> p_correlations)
     {
         m_correlations = Utils::copy(p_correlations);
+    }
+
+    void HJM_Model::size_check()
+    {
+        int m = m_alphas.size();
+        int n = m_sigmas.size();
+        assert(m == n);
+        int nr = m_correlations.size();
+        assert(nr == m);
+        if(m > 0)
+            assert(m_correlations[0].size() == m);
     }
 }

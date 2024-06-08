@@ -8,6 +8,7 @@ namespace HJM
     class HJM_Model
     {
         public:
+        HJM_Model();
         HJM_Model(DoubVec p_alphas, DoubVec p_sigmas, std::vector<DoubVec> p_correlations);
         HJM_Model copy() const;
 
@@ -19,6 +20,7 @@ namespace HJM
         void set_alphas(const DoubVec p_alphas);
         void set_sigmas(const DoubVec p_sigmas);
         void set_correlations(const std::vector<DoubVec> p_correlations);
+        void size_check();
 
         DoubVec m_alphas;
         DoubVec m_sigmas;
