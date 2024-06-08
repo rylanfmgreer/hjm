@@ -1,6 +1,7 @@
 #include "model.hpp"
 #include "../utils/utils.hpp"
 #include <cassert>
+#include <algorithm>
 namespace HJM
 {
     HJM_Model::HJM_Model(){}
@@ -41,5 +42,12 @@ namespace HJM
         assert(nr == m);
         if(m > 0)
             assert(m_correlations[0].size() == m);
+    }
+
+    void HJM_Model::scale_vols(double p_scalar)
+    {
+        std::transform(m_sigmas.begin(), m_sigmas.end(), m_sigmas.begin(),
+            [p_scalar](double p_x){ return p_x * p_scalar; }
+        );
     }
 }

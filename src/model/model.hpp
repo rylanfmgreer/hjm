@@ -15,6 +15,7 @@ namespace HJM
         double get_alpha(int p_index) const { return m_alphas[p_index]; }
         double get_sigma(int p_index) const{ return m_sigmas[p_index]; }
         double get_correlation(int p_row, int p_col) const{ return m_correlations[p_row][p_col];}
+        void scale_vols(double p_scalar);
         
         private:
         void set_alphas(const DoubVec p_alphas);
