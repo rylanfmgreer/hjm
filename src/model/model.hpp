@@ -15,8 +15,6 @@ namespace HJM
         double get_sigma(int p_index) const{ return m_sigmas[p_index]; }
         double get_correlation(int p_row, int p_col) const{ return m_correlations[p_row][p_col];}
         
-
-
         private:
         void set_alphas(const DoubVec p_alphas);
         void set_sigmas(const DoubVec p_sigmas);
