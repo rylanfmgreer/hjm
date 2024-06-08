@@ -28,7 +28,7 @@ namespace HJM
                     - exp(alpha_a_i * Te_minus_ts - alpha_b_j * Ts_minus_ts));
                 double term_Ts_Te = (exp( -alpha_a_i * Ts_minus_te - alpha_b_j * Te_minus_te)
                     - exp(alpha_a_i * Ts_minus_ts - alpha_b_j * Te_minus_ts));
-                double term_Ts_Ts = (exp( -(alpha_a_i + alpha_b_j) * Te_minus_te)
+                double term_Te_Te = (exp( -(alpha_a_i + alpha_b_j) * Te_minus_te)
                     - exp( -(alpha_a_i + alpha_b_j) * Te_minus_ts));
 
                 double all_terms = term_Ts_Ts + term_Te_Ts + term_Ts_Te + term_Ts_Ts;

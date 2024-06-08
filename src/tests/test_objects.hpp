@@ -1,8 +1,6 @@
 #ifndef _test_objects_hpp_938740289302
 #define _test_objects_hpp_938740289302
-
-#include "model/model.hpp"
-#include "vol_integrator/vol_integrator.hpp"
+#include "../model/model.hpp"
 
 namespace HJM
 {

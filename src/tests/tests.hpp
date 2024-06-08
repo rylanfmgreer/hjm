@@ -18,7 +18,7 @@ namespace HJM
         HJM_Model m_model;
         VolIntegrator m_integrator;
 
-    }
+    };
 }
 
 #endif
