@@ -16,6 +16,7 @@ namespace HJM
         */
         public:
         HJM_Model();
+        ~HJM_Model(){}
         HJM_Model(DoubVec p_alphas, DoubVec p_sigmas, std::vector<DoubVec> p_correlations);
         HJM_Model copy() const;
 
@@ -23,6 +24,7 @@ namespace HJM
         double get_sigma(int p_index) const{ return m_sigmas[p_index]; }
         double get_correlation(int p_row, int p_col) const{ return m_correlations[p_row][p_col];}
         void scale_vols(double p_scalar);
+        void clone_into_this(const HJM_Model& p_model);
         
         private:
         void set_alphas(const DoubVec p_alphas);

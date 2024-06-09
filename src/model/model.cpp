@@ -50,4 +50,11 @@ namespace HJM
             [p_scalar](double p_x){ return p_x * p_scalar; }
         );
     }
+
+    void HJM_Model::clone_into_this(const HJM_Model& p_other_model)
+    {
+        set_alphas(p_other_model.m_alphas);
+        set_sigmas(p_other_model.m_sigmas);
+        set_correlations(p_other_model.m_correlations);
+    }
 }

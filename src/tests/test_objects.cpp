@@ -7,7 +7,7 @@
 
             HJM_Model create_model()
             {
-                DoubVec alphas{0.0001, 1., 0.0001, 1. };
+                DoubVec alphas{0.1, 1., 0.1, 1. };
                 DoubVec sigmas{0.5, 0.6, 0.5, 0.6 };
                 return HJM_Model(alphas, sigmas, make_correlation_matrix());
             }
