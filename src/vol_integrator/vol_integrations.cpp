@@ -61,6 +61,6 @@ namespace HJM
                 p_delivery_time, p_observation_start_time, p_observation_end_time);
             double std_b = volatility(p_indices_2,
                 p_delivery_time, p_observation_start_time, p_observation_end_time);
-            return cov / (std_a * std_b);
+            return exp( log(cov) - log(std_a) - log(std_b));
         }
 }

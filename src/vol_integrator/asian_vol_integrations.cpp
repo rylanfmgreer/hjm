@@ -112,6 +112,6 @@ namespace HJM
                 p_observation_start_time, p_observation_end_time);
             double std_b = asian_volatility(p_indices_2, p_delivery_start_time, p_delivery_end_time,
                 p_observation_start_time, p_observation_end_time);
-            return cov / (std_a * std_b);
+            return exp( log(cov) - log(std_a) - log(std_b));
         }
 }
