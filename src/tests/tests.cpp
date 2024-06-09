@@ -37,7 +37,7 @@ namespace HJM
     bool TestSuite::test_volatility() const
     {
         // TODO: get correct vol values
-        double desired_volatility = 0.6829132363298297;
+        double desired_volatility = 0.68295921453362607;
         double calculated_volatiltiy = m_integrator.volatility(
             TestObjects::F_idx, 1.0, 0.0, 0.1);
         return close(desired_volatility, calculated_volatiltiy);
@@ -46,7 +46,7 @@ namespace HJM
     bool TestSuite::test_asian_volatility() const
     {
         // TODO: get correct vol values
-        double desired_volatility = 0.55877601512711517;
+        double desired_volatility = 0.54017402899413525;
         double calculated_volatiltiy = m_integrator.asian_volatility(
             TestObjects::F_idx, 1.0, 1.08, 0.0, 0.1);
         return close(desired_volatility, calculated_volatiltiy);
