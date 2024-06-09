@@ -5,6 +5,10 @@
 
 namespace HJM
 {
+    void test()
+    {
+        TestSuite().run_tests();
+    }
     bool TestSuite::close(double x, double y, double tol) const
     {
         return abs(x - y) < tol;
