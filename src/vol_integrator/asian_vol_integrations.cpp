@@ -22,19 +22,20 @@ namespace HJM
                 double Ts_minus_te = p_delivery_start_time - p_observation_end_time;
                 double Te_minus_te = p_delivery_end_time - p_observation_end_time;
                 double integration_period = p_observation_end_time - p_observation_start_time;
-
+                double term_Ts_Ts, term_Te_Ts, term_Ts_Te, term_Te_Te;
                 // create the terms we add together
-                double term_Ts_Ts = (exp(-(alpha_a_i + alpha_b_j) * Ts_minus_te)
-                                   - exp(-(alpha_a_i + alpha_b_j) * Ts_minus_ts));
-                double term_Te_Ts = (exp( -alpha_a_i * Te_minus_te - alpha_b_j * Ts_minus_te)
-                                   - exp( -alpha_a_i * Te_minus_ts - alpha_b_j * Ts_minus_ts));
-                double term_Ts_Te = (exp( -alpha_a_i * Ts_minus_te - alpha_b_j * Te_minus_te)
-                                   - exp( -alpha_a_i * Ts_minus_ts - alpha_b_j * Te_minus_ts));
-                double term_Te_Te = (exp(-(alpha_a_i + alpha_b_j) * Te_minus_te)
-                                   - exp(-(alpha_a_i + alpha_b_j) * Te_minus_ts));
-
-                // recompute with better accuracy
                 /*
+                term_Ts_Ts = (exp(-(alpha_a_i + alpha_b_j) * Ts_minus_te)
+                                   - exp(-(alpha_a_i + alpha_b_j) * Ts_minus_ts));
+                term_Te_Ts = (exp( -alpha_a_i * Te_minus_te - alpha_b_j * Ts_minus_te)
+                                   - exp( -alpha_a_i * Te_minus_ts - alpha_b_j * Ts_minus_ts));
+                term_Ts_Te = (exp( -alpha_a_i * Ts_minus_te - alpha_b_j * Te_minus_te)
+                                   - exp( -alpha_a_i * Ts_minus_ts - alpha_b_j * Te_minus_ts));
+                term_Te_Te = (exp(-(alpha_a_i + alpha_b_j) * Te_minus_te)
+                                   - exp(-(alpha_a_i + alpha_b_j) * Te_minus_ts));
+                */
+                // recompute with better accuracy
+                
                 term_Ts_Ts = Utils::numerically_stable_exponential_diff(
                     -(alpha_a_i + alpha_b_j) * Ts_minus_te,
                     -(alpha_a_i + alpha_b_j) * Ts_minus_ts);
@@ -50,7 +51,7 @@ namespace HJM
                 term_Te_Te = Utils::numerically_stable_exponential_diff(
                     -(alpha_a_i + alpha_b_j) * Te_minus_te,
                     -(alpha_a_i + alpha_b_j) * Te_minus_ts);
-                */
+                
                 double tmp_TsTs_TeTs = Utils::numerically_stable_exponential_diff(
                     log(term_Ts_Ts), log(term_Te_Ts));
                 double tmp_TsTe_TeTe = Utils::numerically_stable_exponential_diff(
@@ -59,9 +60,9 @@ namespace HJM
                     log(tmp_TsTs_TeTs), log(tmp_TsTe_TeTe));
 
                 //double all_terms = term_Ts_Ts - term_Te_Ts - term_Ts_Te + term_Te_Te;
-                double scalar_numerator = rho_ai_bj * sigma_a_i * sigma_b_j;
-                double scalar_denominator = (alpha_a_i * alpha_b_j * (alpha_a_i + alpha_b_j)) * (integration_period * integration_period);
-                double log_scalar = log(scalar_numerator) - log(scalar_denominator);
+                double log_scalar_numerator = log(rho_ai_bj) + log(sigma_a_i) + log(sigma_b_j);
+                double log_scalar_denominator = log(alpha_a_i) + log(alpha_b_j) + log(alpha_a_i + alpha_b_j) + 2 * log(integration_period);
+                double log_scalar = log_scalar_numerator - log_scalar_denominator;
                 double log_all = log(sum_all_terms);
                 double final_term = exp(log_all + log_scalar);
                 return final_term;
