@@ -22,33 +22,23 @@ namespace HJM
                 double Ts_minus_te = p_delivery_start_time - p_observation_end_time;
                 double Te_minus_te = p_delivery_end_time - p_observation_end_time;
                 double integration_period = p_observation_end_time - p_observation_start_time;
-                double term_Ts_Ts, term_Te_Ts, term_Ts_Te, term_Te_Te;
-                // create the terms we add together
-                /*
-                term_Ts_Ts = (exp(-(alpha_a_i + alpha_b_j) * Ts_minus_te)
-                                   - exp(-(alpha_a_i + alpha_b_j) * Ts_minus_ts));
-                term_Te_Ts = (exp( -alpha_a_i * Te_minus_te - alpha_b_j * Ts_minus_te)
-                                   - exp( -alpha_a_i * Te_minus_ts - alpha_b_j * Ts_minus_ts));
-                term_Ts_Te = (exp( -alpha_a_i * Ts_minus_te - alpha_b_j * Te_minus_te)
-                                   - exp( -alpha_a_i * Ts_minus_ts - alpha_b_j * Te_minus_ts));
-                term_Te_Te = (exp(-(alpha_a_i + alpha_b_j) * Te_minus_te)
-                                   - exp(-(alpha_a_i + alpha_b_j) * Te_minus_ts));
-                */
-                // recompute with better accuracy
-                
-                term_Ts_Ts = Utils::numerically_stable_exponential_diff(
+
+                // We work in log space for the rest of the computation, 
+                // as otherwise there are big numerical instabilities
+                // for small values of alpha.
+                double term_Ts_Ts = Utils::numerically_stable_exponential_diff(
                     -(alpha_a_i + alpha_b_j) * Ts_minus_te,
                     -(alpha_a_i + alpha_b_j) * Ts_minus_ts);
 
-                term_Te_Ts = Utils::numerically_stable_exponential_diff(
+                double term_Te_Ts = Utils::numerically_stable_exponential_diff(
                    -alpha_a_i * Te_minus_te - alpha_b_j * Ts_minus_te,
                    -alpha_a_i * Te_minus_ts - alpha_b_j * Ts_minus_ts);
 
-                term_Ts_Te = Utils::numerically_stable_exponential_diff(
+                double term_Ts_Te = Utils::numerically_stable_exponential_diff(
                    -alpha_a_i * Ts_minus_te - alpha_b_j * Te_minus_te,
                    -alpha_a_i * Ts_minus_ts - alpha_b_j * Te_minus_ts);
 
-                term_Te_Te = Utils::numerically_stable_exponential_diff(
+                double term_Te_Te = Utils::numerically_stable_exponential_diff(
                     -(alpha_a_i + alpha_b_j) * Te_minus_te,
                     -(alpha_a_i + alpha_b_j) * Te_minus_ts);
                 
@@ -59,16 +49,12 @@ namespace HJM
                 double sum_all_terms = Utils::numerically_stable_exponential_diff(
                     log(tmp_TsTs_TeTs), log(tmp_TsTe_TeTe));
 
-                //double all_terms = term_Ts_Ts - term_Te_Ts - term_Ts_Te + term_Te_Te;
                 double log_scalar_numerator = log(rho_ai_bj) + log(sigma_a_i) + log(sigma_b_j);
                 double log_scalar_denominator = log(alpha_a_i) + log(alpha_b_j) + log(alpha_a_i + alpha_b_j) + 2 * log(integration_period);
                 double log_scalar = log_scalar_numerator - log_scalar_denominator;
                 double log_all = log(sum_all_terms);
                 double final_term = exp(log_all + log_scalar);
                 return final_term;
-
-                //double final_term = all_terms * scalar_numerator / scalar_denominator;
-                //return final_term;
             }
 
     double VolIntegrator::asian_covariance(IdxVec& p_indices_1, IdxVec& p_indices_2,
