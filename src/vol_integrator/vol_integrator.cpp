@@ -4,6 +4,11 @@
 namespace HJM
 {
 
+    ParamSet VolIntegrator::unpack_these_params(int p_index_1, int p_index_2) const
+    {
+        return m_model->unpack(p_index_1, p_index_2);
+    }
+
     VolIntegrator::VolIntegrator(HJM_Model* p_model)
     {
         set_model(p_model);

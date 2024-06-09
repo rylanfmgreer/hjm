@@ -8,16 +8,15 @@ namespace HJM
             double p_observation_start_time, double p_observation_end_time) const
     {
                 // unpack the model params
-                double sigma_a_i = m_model->get_sigma(p_index_1);
-                double sigma_b_j = m_model->get_sigma(p_index_2);
-                double alpha_a_i = m_model->get_alpha(p_index_1);
-                double alpha_b_j = m_model->get_alpha(p_index_2);
-                double rho_ai_bj = m_model->get_correlation(p_index_1, p_index_2);
+                ParamSet these_params(unpack_these_params(p_index_1, p_index_2));
 
-                double sum_alpha = alpha_a_i + alpha_b_j;
+
+                double sum_alpha = these_params.alpha_a_i + these_params.alpha_b_j;
                 double t_long = exp(-sum_alpha * (p_delivery_time - p_observation_end_time));
                 double t_short = exp(-sum_alpha * (p_delivery_time - p_observation_start_time));
-                double scalar = (rho_ai_bj * sigma_a_i * sigma_b_j) / (sum_alpha);
+                double scalar = (
+                    these_params.rho_ai_bj * these_params.sigma_a_i * these_params.alpha_b_j
+                    ) / (sum_alpha);
                 return scalar * (t_long - t_short);
     }
 

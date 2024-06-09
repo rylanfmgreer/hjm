@@ -6,6 +6,8 @@
 namespace HJM
 {
     typedef const std::vector<int> IdxVec;
+
+
     class VolIntegrator
     {
         public:
@@ -55,6 +57,11 @@ namespace HJM
             double p_delivery_time,
             double p_observation_start_time, double p_observation_end_time) const;
 
+        double get_log_scalar_for_asian_cov_integration(const ParamSet& p,   
+         double p_observation_start_time,
+         double p_observation_end_time) const;
+        
+        ParamSet unpack_these_params(int p_index_1, int p_index_2) const;
 
 
     };
