@@ -1,6 +1,8 @@
 #include "model.hpp"
 #include <cassert>
 #include <algorithm>
+#include "../utils/utils.hpp"
+
 namespace HJM
 {
     HJM_Model HJM_Model::copy() const
@@ -23,6 +25,8 @@ namespace HJM
         set_alphas(p_other_model.m_alphas);
         set_sigmas(p_other_model.m_sigmas);
         set_correlations(p_other_model.m_correlations);
+        m_H_start_times = Utils::copy(p_other_model.m_H_start_times);
+        m_H_values = Utils::copy(p_other_model.m_H_values);
         size_check();
     }
 

@@ -6,11 +6,15 @@ namespace HJM
 {
     struct ParamSet
     {
-        double sigma_a_i;
-        double sigma_b_j;
-        double alpha_a_i;
-        double alpha_b_j;
-        double rho_ai_bj;
+        /*
+             The set of params associated with
+             a single pair of factors.
+        */
+        const double sigma_a_i;
+        const double sigma_b_j;
+        const double alpha_a_i;
+        const double alpha_b_j;
+        const double rho_ai_bj;
     };
 
     typedef std::vector<double> DoubVec;
@@ -20,7 +24,6 @@ namespace HJM
             We assume W(t) is an N-dimensional Brownian motion with correlation matrix S.
             Let f(t, T) be the price of a contract for instantaneous delivery at time T,
             observed at time t.
-
 
         */
         public:
