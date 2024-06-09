@@ -6,6 +6,7 @@ namespace HJM
     void HJM_Model::set_alphas(const DoubVec& p_alphas)
     {
         m_alphas = Utils::copy(p_alphas);
+        sanity_check_alphas();
     }
 
     void HJM_Model::set_sigmas(const DoubVec& p_sigmas)
