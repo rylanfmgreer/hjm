@@ -7,7 +7,7 @@
 
             HJM_Model create_model()
             {
-                double a_0 = 0.000000001;
+                double a_0 = 1e-9;
                 double a_1 = 1.0;
                 double sig_0 = 0.5;
                 double sig_1 = 0.6;

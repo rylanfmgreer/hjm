@@ -54,6 +54,7 @@ namespace HJM
         DoubVec m_sigmas;
         std::vector<DoubVec> m_correlations;
 
+        // for scaling vols to match the market
         DoubVec m_H_start_times;
         DoubVec m_H_values;
     

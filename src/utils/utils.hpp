@@ -13,7 +13,7 @@ namespace HJM
         /*
             exp(p_positive_exp_arg) - exp(p_negative_exp_arg)
         */
-        double numerically_stable_exponential_diff(
+        double improved_diff_of_exponentials(
             double p_positive_exp_arg, double p_negative_exp_arg);
     };
     

@@ -18,12 +18,14 @@ namespace HJM
         std::transform(p_mat.begin(), p_mat.end(), new_matrix.begin(), [](const std::vector<double> x){ return copy(x); });
         return new_matrix;
     }
-    double Utils::numerically_stable_exponential_diff(
+    double Utils::improved_diff_of_exponentials(
         double p_positive_exp_arg, double p_negative_exp_arg)
     {
-        double e_a = exp(p_positive_exp_arg);
-        double e_b_minus_a = exp(p_negative_exp_arg - p_positive_exp_arg);
-        return e_a * (1.0 - e_b_minus_a);
+        double a_plus_b_over_2 = 0.5 * (p_positive_exp_arg + p_negative_exp_arg);
+        double a_minus_b_over_2 = 0.5 * (p_positive_exp_arg - p_negative_exp_arg);
+        double scalar = exp(a_plus_b_over_2);
+        double diff = (exp(a_minus_b_over_2) - exp(-a_minus_b_over_2));
+        return scalar * diff;
     }
 
        

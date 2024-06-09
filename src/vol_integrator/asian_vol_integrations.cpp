@@ -34,27 +34,27 @@ namespace HJM
                 // We work in log space for the rest of the computation, 
                 // as otherwise there are big numerical instabilities
                 // for small values of alpha.
-                double term_Ts_Ts = Utils::numerically_stable_exponential_diff(
+                double term_Ts_Ts = Utils::improved_diff_of_exponentials(
                     -(these_params.alpha_a_i + these_params.alpha_b_j) * Ts_minus_te,
                     -(these_params.alpha_a_i + these_params.alpha_b_j) * Ts_minus_ts);
 
-                double term_Te_Ts = Utils::numerically_stable_exponential_diff(
+                double term_Te_Ts = Utils::improved_diff_of_exponentials(
                    -these_params.alpha_a_i * Te_minus_te - these_params.alpha_b_j * Ts_minus_te,
                    -these_params.alpha_a_i * Te_minus_ts - these_params.alpha_b_j * Ts_minus_ts);
 
-                double term_Ts_Te = Utils::numerically_stable_exponential_diff(
+                double term_Ts_Te = Utils::improved_diff_of_exponentials(
                    -these_params.alpha_a_i * Ts_minus_te - these_params.alpha_b_j * Te_minus_te,
                    -these_params.alpha_a_i * Ts_minus_ts - these_params.alpha_b_j * Te_minus_ts);
 
-                double term_Te_Te = Utils::numerically_stable_exponential_diff(
+                double term_Te_Te = Utils::improved_diff_of_exponentials(
                     -(these_params.alpha_a_i + these_params.alpha_b_j) * Te_minus_te,
                     -(these_params.alpha_a_i + these_params.alpha_b_j) * Te_minus_ts);
                 
-                double tmp_TsTs_TeTs = Utils::numerically_stable_exponential_diff(
+                double tmp_TsTs_TeTs = Utils::improved_diff_of_exponentials(
                     log(term_Ts_Ts), log(term_Te_Ts));
-                double tmp_TsTe_TeTe = Utils::numerically_stable_exponential_diff(
+                double tmp_TsTe_TeTe = Utils::improved_diff_of_exponentials(
                     log(term_Ts_Te), log(term_Te_Te));
-                double sum_all_terms = Utils::numerically_stable_exponential_diff(
+                double sum_all_terms = Utils::improved_diff_of_exponentials(
                     log(tmp_TsTs_TeTs), log(tmp_TsTe_TeTe));
 
                 
