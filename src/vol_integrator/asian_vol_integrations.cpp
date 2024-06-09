@@ -1,5 +1,6 @@
 #include "vol_integrator.hpp"
 #include <cmath>
+#include "../utils/utils.hpp"
 
 namespace HJM
 {
@@ -32,11 +33,41 @@ namespace HJM
                 double term_Te_Te = (exp(-(alpha_a_i + alpha_b_j) * Te_minus_te)
                                    - exp(-(alpha_a_i + alpha_b_j) * Te_minus_ts));
 
-                double all_terms = term_Ts_Ts - term_Te_Ts - term_Ts_Te + term_Te_Te;
+                // recompute with better accuracy
+                /*
+                term_Ts_Ts = Utils::numerically_stable_exponential_diff(
+                    -(alpha_a_i + alpha_b_j) * Ts_minus_te,
+                    -(alpha_a_i + alpha_b_j) * Ts_minus_ts);
+
+                term_Te_Ts = Utils::numerically_stable_exponential_diff(
+                   -alpha_a_i * Te_minus_te - alpha_b_j * Ts_minus_te,
+                   -alpha_a_i * Te_minus_ts - alpha_b_j * Ts_minus_ts);
+
+                term_Ts_Te = Utils::numerically_stable_exponential_diff(
+                   -alpha_a_i * Ts_minus_te - alpha_b_j * Te_minus_te,
+                   -alpha_a_i * Ts_minus_ts - alpha_b_j * Te_minus_ts);
+
+                term_Te_Te = Utils::numerically_stable_exponential_diff(
+                    -(alpha_a_i + alpha_b_j) * Te_minus_te,
+                    -(alpha_a_i + alpha_b_j) * Te_minus_ts);
+                */
+                double tmp_TsTs_TeTs = Utils::numerically_stable_exponential_diff(
+                    log(term_Ts_Ts), log(term_Te_Ts));
+                double tmp_TsTe_TeTe = Utils::numerically_stable_exponential_diff(
+                    log(term_Ts_Te), log(term_Te_Te));
+                double sum_all_terms = Utils::numerically_stable_exponential_diff(
+                    log(tmp_TsTs_TeTs), log(tmp_TsTe_TeTe));
+
+                //double all_terms = term_Ts_Ts - term_Te_Ts - term_Ts_Te + term_Te_Te;
                 double scalar_numerator = rho_ai_bj * sigma_a_i * sigma_b_j;
                 double scalar_denominator = (alpha_a_i * alpha_b_j * (alpha_a_i + alpha_b_j)) * (integration_period * integration_period);
-                double final_term = all_terms * scalar_numerator / scalar_denominator;
+                double log_scalar = log(scalar_numerator) - log(scalar_denominator);
+                double log_all = log(sum_all_terms);
+                double final_term = exp(log_all + log_scalar);
                 return final_term;
+
+                //double final_term = all_terms * scalar_numerator / scalar_denominator;
+                //return final_term;
             }
 
     double VolIntegrator::asian_covariance(IdxVec& p_indices_1, IdxVec& p_indices_2,
