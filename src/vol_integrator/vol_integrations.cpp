@@ -9,15 +9,13 @@ namespace HJM
     {
                 // unpack the model params
                 ParamSet these_params(unpack_these_params(p_index_1, p_index_2));
-
-
                 double sum_alpha = these_params.alpha_a_i + these_params.alpha_b_j;
                 double t_long = exp(-sum_alpha * (p_delivery_time - p_observation_end_time));
                 double t_short = exp(-sum_alpha * (p_delivery_time - p_observation_start_time));
-                double scalar = (
-                    these_params.rho_ai_bj * these_params.sigma_a_i * these_params.alpha_b_j
-                    ) / (sum_alpha);
-                return scalar * (t_long - t_short);
+                double log_scalar = (
+                    log(these_params.rho_ai_bj) + log(these_params.sigma_a_i)
+                    + log(these_params.sigma_b_j) - log(sum_alpha));
+                return exp(log_scalar) * (t_long - t_short);
     }
 
     double VolIntegrator::covariance(IdxVec& p_indices_1, IdxVec& p_indices_2,
