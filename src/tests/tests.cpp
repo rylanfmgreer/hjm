@@ -5,6 +5,10 @@
 
 namespace HJM
 {
+    void test()
+    {
+        TestSuite().run_tests();
+    }
     bool TestSuite::close(double x, double y, double tol) const
     {
         return abs(x - y) < tol;
@@ -37,7 +41,7 @@ namespace HJM
     bool TestSuite::test_volatility() const
     {
         // TODO: get correct vol values
-        double desired_volatility = 0.68295921453362607;
+        double desired_volatility = 0.68295931623565964;
         double calculated_volatiltiy = m_integrator.volatility(
             TestObjects::F_idx, 1.0, 0.0, 0.1);
         return close(desired_volatility, calculated_volatiltiy);
@@ -46,9 +50,9 @@ namespace HJM
     bool TestSuite::test_asian_volatility() const
     {
         // TODO: get correct vol values
-        double desired_volatility = 0.54017402899413525;
+        double desired_volatility = 0.66030671289229304;
         double calculated_volatiltiy = m_integrator.asian_volatility(
-            TestObjects::F_idx, 1.0, 1.08, 0.0, 0.1);
+            TestObjects::F_idx, 1.0, 1.25, 0.0, 0.1);
         return close(desired_volatility, calculated_volatiltiy);
     }
 

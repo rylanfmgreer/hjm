@@ -63,6 +63,10 @@ namespace HJM
         
         ParamSet unpack_these_params(int p_index_1, int p_index_2) const;
 
+        double calculate_exponential_integral_in_small_t_for_asian_covariance(
+            double sum_of_alphas, double p_observation_start_time, double p_observation_end_time) const;
+        double calculate_multiple_exponential_sum_scalar_for_exponential_integral(
+            ParamSet& these_params, double p_delivery_start_time, double p_delivery_end_time) const;
 
     };
 };

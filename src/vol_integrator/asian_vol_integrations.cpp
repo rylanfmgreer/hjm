@@ -13,11 +13,34 @@ namespace HJM
             double log_scalar_numerator = (log(p_these_params.rho_ai_bj)
                 + log(p_these_params.sigma_a_i) + log(p_these_params.sigma_b_j));
             double log_scalar_denominator = (log(p_these_params.alpha_a_i) + log(p_these_params.alpha_b_j)
-                + log(p_these_params.alpha_a_i + p_these_params.alpha_b_j) + 2 * log(integration_period));
+                + log(p_these_params.alpha_a_i + p_these_params.alpha_b_j) + 2. * log(integration_period));
             double log_scalar = log_scalar_numerator - log_scalar_denominator;
             return log_scalar;
         }
     
+    double VolIntegrator::calculate_exponential_integral_in_small_t_for_asian_covariance(
+        double sum_of_alphas, double p_observation_start_time, double p_observation_end_time) const
+    {
+                double exponential_integral_pos = expm1(sum_of_alphas * p_observation_end_time) ;
+                double exponential_integral_neg = expm1(sum_of_alphas * p_observation_start_time);
+                double exponential_integral = (exponential_integral_pos - exponential_integral_neg) / sum_of_alphas;
+                return exponential_integral;
+
+    }
+
+    double VolIntegrator::calculate_multiple_exponential_sum_scalar_for_exponential_integral(
+        ParamSet& these_params, double p_delivery_start_time, double p_delivery_end_time) const
+        {
+                double product_of_alphas = (these_params.alpha_a_i * these_params.alpha_b_j);
+                double term_Ts_Ts = expm1(-these_params.alpha_a_i * p_delivery_start_time -these_params.alpha_b_j * p_delivery_start_time);
+                double Term_Te_Ts = expm1(-these_params.alpha_a_i * p_delivery_end_time -these_params.alpha_b_j * p_delivery_start_time);
+                double Term_Ts_Te = expm1(-these_params.alpha_a_i * p_delivery_start_time -these_params.alpha_b_j * p_delivery_end_time);
+                double Term_Te_Te = expm1(-these_params.alpha_a_i * p_delivery_end_time -these_params.alpha_b_j * p_delivery_end_time);
+                double tmp_Ts_Ts_Te_Ts = term_Ts_Ts - Term_Te_Ts;
+                double tmp_Ts_Te_Te_Te = Term_Ts_Te - Term_Te_Te;
+                double sum_of_all_terms = (tmp_Ts_Ts_Te_Ts - tmp_Ts_Te_Te_Te) / product_of_alphas;
+                return sum_of_all_terms;
+        }
     double VolIntegrator::exponential_integral_for_asian_covariance(
             int p_index_1, int p_index_2,
             double p_delivery_start_time, double p_delivery_end_time,
@@ -26,42 +49,13 @@ namespace HJM
                 ParamSet these_params(unpack_these_params(p_index_1, p_index_2));
 
                 // create the time differences -- cleaner to read this way
-                double Ts_minus_ts = p_delivery_start_time - p_observation_start_time;
-                double Te_minus_ts = p_delivery_end_time - p_observation_start_time;
-                double Ts_minus_te = p_delivery_start_time - p_observation_end_time;
-                double Te_minus_te = p_delivery_end_time - p_observation_end_time;
+                double delivery_time = p_delivery_start_time - p_delivery_end_time;
+                double sum_of_alphas = these_params.alpha_a_i + these_params.alpha_b_j;
+                double scalar_outside = (these_params.rho_ai_bj * these_params.sigma_a_i * these_params.sigma_b_j) / (delivery_time * delivery_time);
 
-                // We work in log space for the rest of the computation, 
-                // as otherwise there are big numerical instabilities
-                // for small values of alpha.
-                double term_Ts_Ts = Utils::improved_diff_of_exponentials(
-                    -(these_params.alpha_a_i + these_params.alpha_b_j) * Ts_minus_te,
-                    -(these_params.alpha_a_i + these_params.alpha_b_j) * Ts_minus_ts);
-
-                double term_Te_Ts = Utils::improved_diff_of_exponentials(
-                   -these_params.alpha_a_i * Te_minus_te - these_params.alpha_b_j * Ts_minus_te,
-                   -these_params.alpha_a_i * Te_minus_ts - these_params.alpha_b_j * Ts_minus_ts);
-
-                double term_Ts_Te = Utils::improved_diff_of_exponentials(
-                   -these_params.alpha_a_i * Ts_minus_te - these_params.alpha_b_j * Te_minus_te,
-                   -these_params.alpha_a_i * Ts_minus_ts - these_params.alpha_b_j * Te_minus_ts);
-
-                double term_Te_Te = Utils::improved_diff_of_exponentials(
-                    -(these_params.alpha_a_i + these_params.alpha_b_j) * Te_minus_te,
-                    -(these_params.alpha_a_i + these_params.alpha_b_j) * Te_minus_ts);
-                
-                double tmp_TsTs_TeTs = Utils::improved_diff_of_exponentials(
-                    log(term_Ts_Ts), log(term_Te_Ts));
-                double tmp_TsTe_TeTe = Utils::improved_diff_of_exponentials(
-                    log(term_Ts_Te), log(term_Te_Te));
-                double sum_all_terms = Utils::improved_diff_of_exponentials(
-                    log(tmp_TsTs_TeTs), log(tmp_TsTe_TeTe));
-
-                
-                double log_scalar = get_log_scalar_for_asian_cov_integration(
-                    these_params, p_observation_start_time, p_observation_end_time);
-                double log_all = log(sum_all_terms);
-                double final_term = exp(log_all + log_scalar);
+                double sum_of_integrals_in_observation = calculate_exponential_integral_in_small_t_for_asian_covariance(sum_of_alphas, p_observation_start_time, p_observation_end_time);
+                double sum_of_integrals_in_delivery = calculate_multiple_exponential_sum_scalar_for_exponential_integral(these_params, p_delivery_start_time, p_delivery_end_time);
+                double final_term = (sum_of_integrals_in_delivery * sum_of_integrals_in_observation) * scalar_outside;
                 return final_term;
             }
 

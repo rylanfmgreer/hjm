@@ -9,12 +9,6 @@ namespace HJM
         // self explanatory
         std::vector<double> copy(const std::vector<double> p_v);
         std::vector< std::vector<double> > copy(const std::vector< std::vector<double>> p_mat);
-
-        /*
-            exp(p_positive_exp_arg) - exp(p_negative_exp_arg)
-        */
-        double improved_diff_of_exponentials(
-            double p_positive_exp_arg, double p_negative_exp_arg);
     };
     
 }; 

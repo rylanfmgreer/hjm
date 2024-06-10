@@ -27,6 +27,8 @@ namespace HJM
         bool close(double x, double y, double tol=1e-10) const;
 
     };
+
+    void test();
 }
 
 #endif
