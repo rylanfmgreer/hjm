@@ -31,14 +31,18 @@ namespace HJM
     double VolIntegrator::calculate_multiple_exponential_sum_scalar_for_exponential_integral(
         ParamSet& these_params, double p_delivery_start_time, double p_delivery_end_time) const
         {
-                double product_of_alphas = (these_params.alpha_a_i * these_params.alpha_b_j);
-                double term_Ts_Ts = expm1(-these_params.alpha_a_i * p_delivery_start_time -these_params.alpha_b_j * p_delivery_start_time);
-                double Term_Te_Ts = expm1(-these_params.alpha_a_i * p_delivery_end_time -these_params.alpha_b_j * p_delivery_start_time);
-                double Term_Ts_Te = expm1(-these_params.alpha_a_i * p_delivery_start_time -these_params.alpha_b_j * p_delivery_end_time);
-                double Term_Te_Te = expm1(-these_params.alpha_a_i * p_delivery_end_time -these_params.alpha_b_j * p_delivery_end_time);
+                double term_Ts_Ts = expm1(-these_params.alpha_a_i * p_delivery_start_time
+                    - these_params.alpha_b_j * p_delivery_start_time);
+                double Term_Te_Ts = expm1(-these_params.alpha_a_i * p_delivery_end_time
+                     -these_params.alpha_b_j * p_delivery_start_time);
+                double Term_Ts_Te = expm1(-these_params.alpha_a_i * p_delivery_start_time
+                    -these_params.alpha_b_j * p_delivery_end_time);
+                double Term_Te_Te = expm1(-these_params.alpha_a_i * p_delivery_end_time
+                    -these_params.alpha_b_j * p_delivery_end_time);
                 double tmp_Ts_Ts_Te_Ts = term_Ts_Ts - Term_Te_Ts;
                 double tmp_Ts_Te_Te_Te = Term_Ts_Te - Term_Te_Te;
-                double sum_of_all_terms = (tmp_Ts_Ts_Te_Ts - tmp_Ts_Te_Te_Te) / product_of_alphas;
+                double sum_of_all_terms = (tmp_Ts_Ts_Te_Ts - tmp_Ts_Te_Te_Te) / (
+                    these_params.alpha_a_i * these_params.alpha_b_j);
                 return sum_of_all_terms;
         }
     double VolIntegrator::exponential_integral_for_asian_covariance(
@@ -53,8 +57,10 @@ namespace HJM
                 double sum_of_alphas = these_params.alpha_a_i + these_params.alpha_b_j;
                 double scalar_outside = (these_params.rho_ai_bj * these_params.sigma_a_i * these_params.sigma_b_j) / (delivery_time * delivery_time);
 
-                double sum_of_integrals_in_observation = calculate_exponential_integral_in_small_t_for_asian_covariance(sum_of_alphas, p_observation_start_time, p_observation_end_time);
-                double sum_of_integrals_in_delivery = calculate_multiple_exponential_sum_scalar_for_exponential_integral(these_params, p_delivery_start_time, p_delivery_end_time);
+                double sum_of_integrals_in_observation = calculate_exponential_integral_in_small_t_for_asian_covariance(
+                    sum_of_alphas, p_observation_start_time, p_observation_end_time);
+                double sum_of_integrals_in_delivery = calculate_multiple_exponential_sum_scalar_for_exponential_integral(
+                    these_params, p_delivery_start_time, p_delivery_end_time);
                 double final_term = (sum_of_integrals_in_delivery * sum_of_integrals_in_observation) * scalar_outside;
                 return final_term;
             }
