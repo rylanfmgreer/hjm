@@ -2,5 +2,5 @@
 
 int main()
 {
-    HJM::TestSuite().run_tests();
+    HJM::test();
 }
