@@ -42,6 +42,7 @@ namespace HJM
         void scale_vols(double p_scalar);
         void clone_into_this(const HJM_Model& p_model);
         ParamSet unpack(int p_index_1, int p_index_2) const;
+        int n_factors() const { return m_alphas.size(); }
 
         private:
         void set_alphas(const DoubVec& p_alphas);
