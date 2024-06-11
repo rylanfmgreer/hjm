@@ -6,7 +6,7 @@ namespace HJM
 {
     namespace Utils
     {
-        // self explanatory
+        // TODO: update to reference to vector
         std::vector<double> copy(const std::vector<double> p_v);
         std::vector< std::vector<double> > copy(const std::vector< std::vector<double>> p_mat);
     };
