@@ -1,11 +1,11 @@
 #ifndef _SIMULATOR_HPP_890284902
 #define _SIMULATOR_HPP_890284902
-
+#include <memory>
+#include <random>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_matrix.h>
-#include <memory>
+#include <vector>
 #include "../model/model.hpp"
-#include <random>
 
 namespace HJM
 {
@@ -24,13 +24,14 @@ namespace HJM
         int m_n_sims;
         double m_dt;
 
-
+        std::vector<double> get_factor(int p_idx);
         void create_rands();
         void copy_correlation_matrix_into_cholesky_ptr();
         void apply_cholesky_decomposition_to_correlation_matrix();
         void apply_choleskied_corr_mat_to_rands();
 
         void allocate_memory();
+
         MatPtr m_sims_ptr;
         MatPtr m_cholesky_ptr;
 

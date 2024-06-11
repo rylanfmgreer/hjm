@@ -8,9 +8,9 @@ namespace HJM
     :m_random_device{},
     m_random_gen{m_random_device()},
     m_normal{0.0, 1.0},
-    m_model_ptr(nullptr),
-    m_sims_ptr(nullptr, &gsl_matrix_free),
-    m_cholesky_ptr(nullptr, &gsl_matrix_free)
+    m_model_ptr( new HJM_Model ),
+    m_sims_ptr(gsl_matrix_alloc(0, 0), &gsl_matrix_free),
+    m_cholesky_ptr(gsl_matrix_alloc(0, 0), &gsl_matrix_free)
     {}
 
     Simulator::Simulator(int p_n_factors, int p_n_sims, double p_dt)
@@ -31,7 +31,6 @@ namespace HJM
     {
         allocate_memory();
         create_rands();
-
         copy_correlation_matrix_into_cholesky_ptr();
         apply_cholesky_decomposition_to_correlation_matrix();
         apply_choleskied_corr_mat_to_rands();
@@ -40,12 +39,15 @@ namespace HJM
 
     void Simulator::apply_cholesky_decomposition_to_correlation_matrix()
     {
-
+        gsl_linalg_cholesky_decomp(m_cholesky_ptr.get());
+        gsl_matrix_transpose(m_cholesky_ptr.get());
     }
 
     void Simulator::apply_choleskied_corr_mat_to_rands()
     {
-
+        MatPtr new_sims( gsl_matrix_alloc(m_n_sims, m_n_factors), &gsl_matrix_free);
+        gsl_linalg_matmult(m_sims_ptr.get(), m_cholesky_ptr.get(), new_sims.get());
+        m_sims_ptr.reset(new_sims.release());
     }
 
     void Simulator::copy_correlation_matrix_into_cholesky_ptr()
@@ -65,6 +67,12 @@ namespace HJM
    
     }
 
-    
+    std::vector<double> Simulator::get_factor(int p_idx)
+    {
+        std::vector<double> return_vector(m_n_sims);
+        for(int i(0); i < m_n_sims; ++i)
+            return_vector[i] = gsl_matrix_get(m_sims_ptr.get(), p_idx, i);
+        return return_vector;
+    }
 
 };

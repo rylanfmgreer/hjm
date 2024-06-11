@@ -56,6 +56,14 @@ namespace HJM
         return close(desired_volatility, calculated_volatiltiy);
     }
 
+    bool TestSuite::test_simulations_generate() const
+    {
+        Simulator mysimulator(4, 1000, 1.0 / 365.0);
+        mysimulator.set_model(*m_model);
+        mysimulator.create_sims();
+        return true;
+    }
+
 
     void TestSuite::run_tests() const
     {
@@ -64,6 +72,8 @@ namespace HJM
         std::cout << test_correlation() << std::endl;
         std::cout << test_volatility() << std::endl;
         std::cout << test_asian_volatility() << std::endl;
+        std::cout << test_simulations_generate() << std::endl;
+
 
     }
 }
